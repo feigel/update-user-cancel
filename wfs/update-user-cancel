@@ -1,0 +1,51 @@
+#!/bin/sh
+
+#!/bin/bash
+
+RETRIES=0 #Here you can change how many update retries the script will do.
+WAIT=30m #Here you can change how long the script will wait after every retry. Please add the suffix 's' for seconds, 'm' for minutes, 'h' for hours or 'd' for days.
+
+UPTODATE=2
+UPDATENEEDED=3
+DIALOGTIMEOUT=30
+#DISPLAY=:0
+#XAUTHORITY=/userhome/.Xauthority
+
+#Logging action
+ACTION="update_user_cancel"
+#output to systemlog with ID amd tag
+LOGGER="logger -it ${ACTION}"
+
+#Starting update script 
+echo "Starting" | $LOGGER
+
+#start retry loop 
+#check if session is active 
+if ! pgrep -x "vmware-remotemk" > /dev/null && ! pgrep -x "wfica" > /dev/null
+then
+    echo "No active session detected, checking for new firmware version" | $LOGGER
+    #get latest settings from UMS 
+    get_rmsettings
+    #Check if update is needed
+    CURRENTFIRMWARE=$(cat /etc/os-release | grep VERSION= | egrep -o "([0-9]{1,}\.)+[0-9]{1,}");
+    UPDATECHECKRESPONSE=$(update-check --check-only)
+    UPDATESTATUS=$?
+    if [ $UPDATESTATUS -eq $UPTODATE ]; then
+        echo "$UPDATECHECKRESPONSE" | $LOGGER
+        exit 0
+        else
+        echo "Current Firmware: $CURRENTFIRMWARE -- $UPDATECHECKRESPONSE" | $LOGGER
+        DISPLAY=:0 zenity --question --text "Update needed $UPDATECHECKRESPONSE\nUpdate NOW?" --width=175 --height=100 --timeout=$DIALOGTIMEOUT --ok-label="Update" --cancel-label="Cancel"
+        DIALOGRESPONSE=$?
+        if [ $DIALOGRESPONSE -eq 0 ]; then
+            echo "Updating firmware per user request" | $LOGGER
+            update
+        elif [ $DIALOGRESPONSE -eq 5 ]; then 
+            echo "Update dialog timed out. Firmware not updated" | $LOGGER
+        elif [ $DIALOGRESPONSE -eq 1 ]; then
+            echo "User cancelled. Firmware not update" | $LOGGER
+        fi
+    fi
+    
+fi
+

@@ -1,0 +1,14 @@
+[Unit]
+Description="Allow user to cancel firmware update"
+
+[Timer]
+OnActiveSec=10
+RemainAfterElapse=no
+#OnBootSec=3min
+#OnUnitActiveSec=24h
+Unit=update-user-cancel.service
+
+[Install]
+#WantedBy=igel-default-boot.target
+PartOf=igel-default-boot.target
+After=igel-default-boot.target
