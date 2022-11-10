@@ -13,7 +13,7 @@
 #license	:MIT license (attribution required)       
 #bash_version   :5.1.16(1)-release
 #============================================================================
-cat << EOF > /usr/local/bin/update-user-cancel
+cat << "EOF" > /usr/local/bin/update-user-cancel
 #!/bin/bash -   
 #title          :update-user-cancel.sh
 #description    :Allow user to choose to update firmware or not
@@ -42,7 +42,7 @@ LOGGERNAME="update_user_cancel"
 # Create easy logger command
 LOGGER="logger -it $LOGGERNAME"
 
-# Star
+# Start
 echo "Starting $LOGGERNAME" | $LOGGER
 
     # get latest ums settings
@@ -74,7 +74,7 @@ echo "Starting $LOGGERNAME" | $LOGGER
 # profit
 EOF
 
-cat << EOF > /etc/systemd/system/update-user-cancel.service
+cat << "EOF" > /etc/systemd/system/update-user-cancel.service
 [Service]
 Environment="DISPLAY=:0"
 Environment="XAUTHORITY=/userhome/.Xauthority"
@@ -89,7 +89,7 @@ WantedBy=igel-default-boot.target
 #systemd-run --unit="update-script" --on-calendar="Tue *-*-* 01:00:00" /wfs/updatescript
 EOF
 
-cat << EOF > /etc/systemd/system/update-user-cancel.timer
+cat << "EOF" > /etc/systemd/system/update-user-cancel.timer
 [Unit]
 Description="Allow user to cancel firmware update"
 
