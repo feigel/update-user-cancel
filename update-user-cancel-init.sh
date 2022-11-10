@@ -77,10 +77,13 @@ echo "Starting $LOGGERNAME" | $LOGGER
                     if [ $DIALOGRESPONSE -eq $ZOK ]; then
                         echo "Updating firmware per user request" | $LOGGER
                         update
+                        exit 0
                     elif [ $DIALOGRESPONSE -eq $ZTIMEOUT ]; then 
                         echo "Update dialog timed out. Firmware not updated" | $LOGGER
+                        exit 0
                     elif [ $DIALOGRESPONSE -eq $ZCANCEL ]; then
                         echo "User cancelled. Firmware not update" | $LOGGER
+                        exit 0
                     fi
                 fi
             done
