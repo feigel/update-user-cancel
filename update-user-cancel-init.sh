@@ -117,8 +117,8 @@ Description="Allow user to cancel firmware update"
 OnActiveSec=10
 RemainAfterElapse=no
 #OnBootSec=3min
-# If you only want this to happen once a day, uncomment
-OnUnitActiveSec=1h
+# If the devices stay on for 24h, run again
+OnUnitActiveSec=24h
 Unit=update-user-cancel.service
 
 [Install]
