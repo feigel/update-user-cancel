@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profiles>
+    <profile>
+        <profile_id>242958</profile_id>
+        <profilename>script-update-user-cancel</profilename>
+        <firmware>
+            <model>IGEL OS 11</model>
+            <version>11.08.200.01</version>
+        </firmware>
+        <description></description>
+        <overwritesessions>false</overwritesessions>
+        <is_master_profile>false</is_master_profile>
+        <is_igel_os>true</is_igel_os>
+        <settings>
+            <pclass name="userinterface.rccustom.custom_cmd_0">
+                <pvalue instancenr="-1" variableExpression="" variableSubstitutionActive="false">/wfs/update-user-cancel-init.sh</pvalue>
+                <variableSubstitutionActive>false</variableSubstitutionActive>
+            </pclass>
+        </settings>
+        <instancesettings/>
+    </profile>
+</profiles>
