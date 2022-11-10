@@ -116,7 +116,7 @@ OnActiveSec=10
 RemainAfterElapse=no
 #OnBootSec=3min
 # If you only want this to happen once a day, uncomment
-#OnUnitActiveSec=24h
+OnUnitActiveSec=1h
 Unit=update-user-cancel.service
 
 [Install]
