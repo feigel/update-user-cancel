@@ -40,7 +40,7 @@ DIALOGTIMEOUT=30
 # Number of times to retry if the lock screen is up
 RETRY=10
 # How long to wait between each retry
-# If set to 0, then retry indefinitely
+# If set to 0, then retry indefinitely -- broken
 RETRYDELAY=10
 
 # Name of program to log
