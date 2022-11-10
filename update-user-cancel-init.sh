@@ -97,6 +97,8 @@ cat << "EOF" > /etc/systemd/system/update-user-cancel.service
 Environment="DISPLAY=:0"
 Environment="XAUTHORITY=/userhome/.Xauthority"
 ExecStart=/usr/local/bin/update-user-cancel
+OnUnitActiveSec=1h
+
 
 [Install]
 WantedBy=igel-default-boot.target
