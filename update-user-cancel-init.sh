@@ -37,6 +37,12 @@ ZTIMEOUT=5
 # Length of time Zenity stays on screen before timeout
 DIALOGTIMEOUT=30
 
+# Number of times to retry if the lock screen is up
+RETRY=10
+# How long to wait between each retry
+# If set to 0, then retry indefinitely
+RETRYDELAY=10
+
 # Name of program to log
 LOGGERNAME="update_user_cancel"
 # Create easy logger command
@@ -58,17 +64,26 @@ echo "Starting $LOGGERNAME" | $LOGGER
         echo "$UPDATECHECKRESPONSE" | $LOGGER
         exit 0
         else
-        echo "Current Firmware: $CURRENTFIRMWARE -- $UPDATECHECKRESPONSE" | $LOGGER
-        DISPLAY=:0 zenity --question --text "Update needed $UPDATECHECKRESPONSE\nUpdate NOW?" --width=175 --height=100 --timeout=$DIALOGTIMEOUT --ok-label="Update" --cancel-label="Cancel"
-        DIALOGRESPONSE=$?
-        if [ $DIALOGRESPONSE -eq $ZOK ]; then
-            echo "Updating firmware per user request" | $LOGGER
-            update
-        elif [ $DIALOGRESPONSE -eq $ZTIMEOUT ]; then 
-            echo "Update dialog timed out. Firmware not updated" | $LOGGER
-        elif [ $DIALOGRESPONSE -eq $ZCANCEL ]; then
-            echo "User cancelled. Firmware not update" | $LOGGER
-        fi
+            until [ $RETRY -lt 1 ]; do
+                if pgrep -f lightdm-igel-greeter >> /dev/null; then 
+                    sleep $RETRYDELAY
+                    if [ $RETRYDELAY -ne 0 ]; then
+                        ((RETRY=$RETRY-1))
+                    fi
+                else 
+                    echo "Current Firmware: $CURRENTFIRMWARE -- $UPDATECHECKRESPONSE" | $LOGGER
+                    DISPLAY=:0 zenity --question --text "Update needed $UPDATECHECKRESPONSE\nUpdate NOW?" --width=175 --height=100 --timeout=$DIALOGTIMEOUT --ok-label="Update" --cancel-label="Cancel"
+                    DIALOGRESPONSE=$?
+                    if [ $DIALOGRESPONSE -eq $ZOK ]; then
+                        echo "Updating firmware per user request" | $LOGGER
+                        update
+                    elif [ $DIALOGRESPONSE -eq $ZTIMEOUT ]; then 
+                        echo "Update dialog timed out. Firmware not updated" | $LOGGER
+                    elif [ $DIALOGRESPONSE -eq $ZCANCEL ]; then
+                        echo "User cancelled. Firmware not update" | $LOGGER
+                    fi
+                fi
+            done
     fi
 
 # profit
@@ -102,6 +117,7 @@ RemainAfterElapse=no
 Unit=update-user-cancel.service
 
 [Install]
+WantedBy=igel-default-boot.target
 PartOf=igel-default-boot.target
 After=igel-default-boot.target
 EOF
