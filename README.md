@@ -4,6 +4,8 @@
 * Using this in a production environment is not supported
 * **Don't enable automatic firmware updates!**
 * It has been tested with:
+    * IGELOS 11.07.110
+    * IGELOS 11.08.200
     * A standard IGEL desktop
     * A standard IGEL desktop with initial logon password
 * It has **not** been tested with:
